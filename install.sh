@@ -17,8 +17,8 @@ genfstab -U /mnt >> /mnt/etc/fstab
 arch-chroot /mnt ln -sf /usr/share/zoneinfo/America/Mexico_City /etc/localtime
 arch-chroot /mnt hwclock --systohc
 arch-chroot /mnt sudo pacman -S nano bash-completion
-arch-chroot /mnt echo "LANG=en_US.UTF-8" > /etc/locale.conf
-arch-chroot /mnt echo "undefinedcode" > /etc/hostname
+arch-chroot /mnt echo LANG=en_US.UTF-8 > /etc/locale.conf
+arch-chroot /mnt echo undefinedcode > /etc/hostname
 arch-chroot /mnt passwd
 arch-chroot /mnt useradd -m -g users -G wheel,storage,power -s /bin/bash undefinedcode
 arch-chroot /mnt EDITOR=nano visudo
