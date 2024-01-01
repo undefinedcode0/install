@@ -27,6 +27,6 @@ arch-chroot /mnt bootctl install
 arch-chroot /mnt nano /boot/loader/entries/arch.conf
 arch-chroot /mnt sudo pacman -S networkmanager
 arch-chroot /mnt sudo systemctl enable NetworkManager.service
-arch-chroot /mnt echo "options=root=PARTUUID=$(blkid -s -o value /dev/sda3) rw" >> /boot/loader/entries/arch.conf
+arch-chroot /mnt echo "options=root=PARTUUID=$(blkid -s PARTUUID -o value /dev/sda3) rw" >> /boot/loader/entries/arch.conf
 umount -R /mnt
 reboot
