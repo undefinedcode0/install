@@ -1,6 +1,8 @@
 #!/bin/bash
 
 # Run the commands in order
+gdisk /dev/sda
+cgdisk /dev/sda
 mkfs.ext4 /dev/sda3
 mkfs.ext4 /dev/sda4
 mkswap /dev/sda2
