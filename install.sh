@@ -9,7 +9,6 @@ mkswap /dev/sda2
 swapon /dev/sda2
 mkfs.fat -F 32 /dev/sda1
 mount /dev/sda3 /mnt
-mkdir /mnt/boot
 mount --mkdir /dev/sda1 /mnt/boot
 sudo pacman -Sy pacman-contrib
 cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
