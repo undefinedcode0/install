@@ -7,6 +7,7 @@ echo LANG=en_US.UTF-8 > /etc/locale.conf
 echo undefinedcode > /etc/hostname
 passwd
 useradd -m -g users -G wheel,storage,power -s /bin/bash undefinedcode
+passwd undefinedcode
 EDITOR=nano visudo
 nano /etc/pacman.conf
 bootctl install
