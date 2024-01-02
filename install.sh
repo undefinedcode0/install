@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Run the commands in order
-echo "You WILL have to manually configure your disk, luckily for you, the script formats it the disk. Here is your layout, boot, swap, root, home"
+echo "You WILL have to manually configure your disk, luckily for you, the script formats the disk after. Here is your layout, boot, swap, root, home"
 gdisk /dev/sda
 cgdisk /dev/sda
 mkfs.ext4 /dev/sda3
