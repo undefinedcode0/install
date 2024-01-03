@@ -40,6 +40,7 @@ echo "initrd /initramfs-linux.img" >> /boot/loader/entries/arch.conf
 echo "options root=PARTUUID=$(blkid -s PARTUUID -o value /dev/sda3) rw" >> /boot/loader/entries/arch.conf
 
 # Install and enable NetworkManager
+sudo pacman -Sy
 sudo pacman -S networkmanager
 sudo systemctl enable NetworkManager.service
 
