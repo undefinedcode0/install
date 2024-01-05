@@ -45,4 +45,5 @@ sudo pacman -S networkmanager
 sudo systemctl enable NetworkManager.service
 
 # Completion message
-echo "Done! Press Ctrl-D to exit chroot environment, then run 'umount -R /mnt;reboot'."
+echo "Done! Press Ctrl-D to exit the chroot environment, then run 'umount -R /mnt;reboot'."
+exit
