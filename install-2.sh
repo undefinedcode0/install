@@ -20,10 +20,12 @@ locale-gen
 echo "$hostname" > /etc/hostname
 
 # Set password for root
+echo "Enter your 'root' password"
 passwd
 
 # Create user with specified username and add to necessary groups
 useradd -m -g users -G wheel,storage,power -s /bin/bash "$username"
+echo "Enter your password for "$username""
 passwd "$username"
 
 # Configure sudoers file
