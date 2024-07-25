@@ -11,7 +11,7 @@ swapon /dev/sda2
 mkfs.fat -F 32 /dev/sda1
 mount /dev/sda3 /mnt
 mount --mkdir /dev/sda1 /mnt/boot
-sudo pacman -Sy --no-confirm pacman-contrib
+sudo pacman -Sy pacman-contrib
 cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
 rankmirrors -n 6 /etc/pacman.d/mirrorlist.backup > /etc/pacman.d/mirrorlist
 pacstrap -K /mnt base linux linux-firmware base-devel
