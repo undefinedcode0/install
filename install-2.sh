@@ -9,7 +9,7 @@ ln -sf /usr/share/zoneinfo/America/Mexico_City /etc/localtime
 hwclock --systohc
 
 # Install necessary packages
-sudo pacman -S nano bash-completion
+sudo pacman -S --noconfirm nano bash-completion
 
 # Set system locale
 echo en_US.UTF-8 UTF-8 > /etc/locale.gen
@@ -44,8 +44,8 @@ echo "initrd /initramfs-linux.img" >> /boot/loader/entries/arch.conf
 echo "options root=PARTUUID=$(blkid -s PARTUUID -o value /dev/sda3) rw" >> /boot/loader/entries/arch.conf
 
 # Install and enable NetworkManager
-sudo pacman -Sy
-sudo pacman -S networkmanager
+sudo pacman -Sy --noconfirm
+sudo pacman -S --noconfirm networkmanager
 sudo systemctl enable NetworkManager.service
 
 # Completion message
