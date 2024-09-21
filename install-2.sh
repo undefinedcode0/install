@@ -3,6 +3,7 @@
 # Prompt the user for their desired username and hostname
 read -p "Enter your username: " username
 read -p "Enter your hostname: " hostname
+read -p "Enter your disk name again (e.g. sda): " ddisk
 
 # Set timezone and system clock
 ln -sf /usr/share/zoneinfo/America/Mexico_City /etc/localtime
@@ -41,7 +42,7 @@ bootctl install
 echo "title Arch Linux" > /boot/loader/entries/arch.conf
 echo "linux /vmlinuz-linux" >> /boot/loader/entries/arch.conf
 echo "initrd /initramfs-linux.img" >> /boot/loader/entries/arch.conf
-echo "options root=PARTUUID=$(blkid -s PARTUUID -o value /dev/sda3) rw" >> /boot/loader/entries/arch.conf
+echo "options root=PARTUUID=$(blkid -s PARTUUID -o value /dev/$ddisk3) rw" >> /boot/loader/entries/arch.conf
 
 # Install and enable NetworkManager
 sudo pacman -Sy --noconfirm

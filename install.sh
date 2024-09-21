@@ -2,14 +2,15 @@
 
 # Run the commands in order
 echo "You WILL have to manually configure your disk, luckily for you, the script formats the disk after. Here is your layout, boot, swap, root, home"
-gdisk /dev/sda
-cgdisk /dev/sda
-mkfs.ext4 /dev/sda3
-mkfs.ext4 /dev/sda4
-mkswap /dev/sda2
-swapon /dev/sda2
-mkfs.fat -F 32 /dev/sda1
-mount /dev/sda3 /mnt
+read -p "Enter your disk name in `/dev` (e.g. 'sda'): " ddisk
+gdisk /dev/$ddisk
+cgdisk /dev/$ddisk
+mkfs.ext4 /dev/$ddisk3
+mkfs.ext4 /dev/$ddisk4
+mkswap /dev/$ddisk2
+swapon /dev/$ddisk2
+mkfs.fat -F 32 /dev/$ddisk1
+mount /dev/$ddisk3 /mnt
 mount --mkdir /dev/sda1 /mnt/boot
 sudo pacman -Sy --noconfirm pacman-contrib
 cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
