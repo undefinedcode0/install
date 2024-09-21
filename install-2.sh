@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 
 # Prompt the user for their desired username and hostname
 read -p "Enter your username: " username
@@ -10,10 +10,10 @@ ln -sf /usr/share/zoneinfo/America/Mexico_City /etc/localtime
 hwclock --systohc
 
 # Install necessary packages
-sudo pacman -S --noconfirm nano bash-completion
+pacman -S --noconfirm nano bash-completion
 
 # Set system locale
-echo en_US.UTF-8 UTF-8 > /etc/locale.gen
+sed -i '/en_US.UTF-8/s/^#//g' /etc/locale.gen
 echo LANG=en_US.UTF-8 > /etc/locale.conf
 locale-gen
 
@@ -26,7 +26,7 @@ passwd
 
 # Create user with specified username and add to necessary groups
 useradd -m -g users -G wheel,storage,power -s /bin/bash "$username"
-echo "Enter your password for "$username""
+echo "Enter your password for $username"
 passwd "$username"
 
 # Configure sudoers file
@@ -38,16 +38,17 @@ nano /etc/pacman.conf
 # Install bootloader
 bootctl install
 
-# Configure bootloader entries
+# Create bootloader entries
+mkdir -p /boot/loader/entries
 echo "title Arch Linux" > /boot/loader/entries/arch.conf
 echo "linux /vmlinuz-linux" >> /boot/loader/entries/arch.conf
 echo "initrd /initramfs-linux.img" >> /boot/loader/entries/arch.conf
-echo "options root=PARTUUID=$(blkid -s PARTUUID -o value /dev/$ddisk3) rw" >> /boot/loader/entries/arch.conf
+echo "options root=PARTUUID=$(blkid -s PARTUUID -o value /dev/${ddisk}3) rw" >> /boot/loader/entries/arch.conf
 
 # Install and enable NetworkManager
-sudo pacman -Sy --noconfirm
-sudo pacman -S --noconfirm networkmanager
-sudo systemctl enable NetworkManager.service
+pacman -Sy --noconfirm
+pacman -S --noconfirm networkmanager
+systemctl enable NetworkManager.service
 
 # Completion message
 echo "Done! Press Ctrl-D to exit the chroot environment, then run 'umount -R /mnt;reboot'."
