@@ -10,7 +10,7 @@ ln -sf /usr/share/zoneinfo/America/Mexico_City /etc/localtime
 hwclock --systohc
 
 # Install necessary packages
-pacman -S --noconfirm nano bash-completion git
+pacman -S --noconfirm nano bash-completion git grub
 
 # Set system locale
 sed -i '/en_US.UTF-8/s/^#//g' /etc/locale.gen
@@ -49,9 +49,6 @@ echo "options root=PARTUUID=$(blkid -s PARTUUID -o value /dev/${ddisk}3) rw" >> 
 read -p "Do you want to install GRUB with the Catppuccin theme? (y/n): " install_grub
 
 if [[ "$install_grub" == "y" ]]; then
-    # Install GRUB
-    pacman -S --noconfirm grub
-
     # Install GRUB on the specified disk
     grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
 
