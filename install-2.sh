@@ -56,8 +56,9 @@ if [[ "$install_grub" == "y" ]]; then
     grub-mkconfig -o /boot/grub/grub.cfg
 
     # Download and apply the Catppuccin theme (assuming a Catppuccin GRUB theme repository exists)
-    git clone https://github.com/catppuccin/grub.git /boot/grub/themes/catppuccin
-    echo 'GRUB_THEME="/boot/grub/themes/catppuccin/theme.txt"' >> /etc/default/grub
+    git clone https://github.com/catppuccin/grub.git
+    sudo cp -r grub/src/* /usr/share/grub/themes/
+    echo 'GRUB_THEME="/usr/share/grub/themes/catppuccin-mocha-grub-theme/theme.txt"' >> /etc/default/grub
     grub-mkconfig -o /boot/grub/grub.cfg
     echo "GRUB with the Catppuccin theme has been installed."
 fi
