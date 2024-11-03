@@ -10,7 +10,7 @@ ln -sf /usr/share/zoneinfo/America/Mexico_City /etc/localtime
 hwclock --systohc
 
 # Install necessary packages
-pacman -S --noconfirm nano bash-completion
+pacman -S --noconfirm nano bash-completion git
 
 # Set system locale
 sed -i '/en_US.UTF-8/s/^#//g' /etc/locale.gen
