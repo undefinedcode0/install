@@ -45,6 +45,26 @@ echo "linux /vmlinuz-linux" >> /boot/loader/entries/arch.conf
 echo "initrd /initramfs-linux.img" >> /boot/loader/entries/arch.conf
 echo "options root=PARTUUID=$(blkid -s PARTUUID -o value /dev/${ddisk}3) rw" >> /boot/loader/entries/arch.conf
 
+# Ask user if they want to install GRUB with the Catppuccin theme
+read -p "Do you want to install GRUB with the Catppuccin theme? (y/n): " install_grub
+
+if [[ "$install_grub" == "y" ]]; then
+    # Install GRUB
+    pacman -S --noconfirm grub
+
+    # Install GRUB on the specified disk
+    grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
+
+    # Configure GRUB
+    grub-mkconfig -o /boot/grub/grub.cfg
+
+    # Download and apply the Catppuccin theme (assuming a Catppuccin GRUB theme repository exists)
+    git clone https://github.com/catppuccin/grub.git /boot/grub/themes/catppuccin
+    echo 'GRUB_THEME="/boot/grub/themes/catppuccin/theme.txt"' >> /etc/default/grub
+    grub-mkconfig -o /boot/grub/grub.cfg
+    echo "GRUB with the Catppuccin theme has been installed."
+fi
+
 # Install and enable NetworkManager
 pacman -Sy --noconfirm
 pacman -S --noconfirm networkmanager
