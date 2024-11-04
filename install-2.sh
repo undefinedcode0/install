@@ -10,7 +10,7 @@ ln -sf /usr/share/zoneinfo/America/Mexico_City /etc/localtime
 hwclock --systohc
 
 # Install necessary packages in a single command
-pacman -S --noconfirm nano bash-completion git grub networkmanager
+pacman -S --noconfirm nano bash-completion git grub networkmanager efibootmgr
 
 # Enable multilib repository in pacman configuration
 sed -i '/\[multilib\]/,/Include/s/^#//' /etc/pacman.conf
