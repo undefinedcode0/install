@@ -43,10 +43,10 @@ echo " - Home: ${home_size} MiB"
 # Proceed with partitioning
 echo "Creating partitions..."
 parted -s "/dev/$ddisk" mklabel gpt \
-    mkpart ESP fat32 1MiB ${boot_size}MiB set 1 boot on \
-    mkpart primary linux-swap ${boot_size}MiB $((boot_size + swap_size))MiB \
-    mkpart primary ext4 $((boot_size + swap_size))MiB $((boot_size + swap_size + root_size))MiB \
-    mkpart primary ext4 $((boot_size + swap_size + root_size))MiB 100%
+    mkpart boot fat32 1MiB ${boot_size}MiB set 1 boot on \
+    mkpart swap linux-swap ${boot_size}MiB $((boot_size + swap_size))MiB \
+    mkpart root ext4 $((boot_size + swap_size))MiB $((boot_size + swap_size + root_size))MiB \
+    mkpart home ext4 $((boot_size + swap_size + root_size))MiB 100%
 
 # Wait for kernel to recognize partitions
 sleep 2
