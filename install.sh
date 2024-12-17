@@ -13,20 +13,30 @@ if [[ "$confirm" != "yes" ]]; then
     exit 1
 fi
 
+
+# Get system RAM size in MiB
+ram_size=$(free -m | awk '/^Mem:/{print $2}')
+
 # Get total disk size in MiB
 disk_size=$(lsblk -b -n -o SIZE "/dev/$ddisk" | awk '{print int($1 / 1024 / 1024)}')
 [[ "$disk_size" -ge 8192 ]] || abort "Disk size is too small. Minimum size is 8 GiB."
 
+# Swap size calculation
+if [[ $((2 * ram_size)) -le $((disk_size / 4)) ]]; then
+    swap_size=$((2 * ram_size)) # If disk can handle 2x RAM size, use it
+else
+    swap_size=$ram_size # Fallback to at least the size of RAM
+fi
+
 # Partition size calculations
-boot_size=512        # Boot partition: 512 MiB
-swap_size=$((disk_size / 10)) # Swap: 10% of total disk size
-root_size=$((disk_size / 2))  # Root: 50% of total disk size
+boot_size=512                                    # Boot partition: 512 MiB
+root_size=$((disk_size / 2))                     # Root: 50% of total disk size
 home_size=$((disk_size - boot_size - swap_size - root_size)) # Remaining space for Home
 
 # Partition layout summary
 echo "Partition layout for /dev/$ddisk:"
 echo " - Boot: ${boot_size} MiB"
-echo " - Swap: ${swap_size} MiB"
+echo " - Swap: ${swap_size} MiB (based on RAM: ${ram_size} MiB)"
 echo " - Root: ${root_size} MiB"
 echo " - Home: ${home_size} MiB"
 
