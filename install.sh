@@ -30,7 +30,7 @@ fi
 
 # Partition size calculations
 boot_size=512                                    # Boot partition: 512 MiB
-root_size=$((disk_size / 2))                     # Root: 50% of total disk size
+root_size=$((disk_size * 70 / 100))                     # Root: 50% of total disk size
 home_size=$((disk_size - boot_size - swap_size - root_size)) # Remaining space for Home
 
 # Partition layout summary
