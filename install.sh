@@ -1,32 +1,59 @@
 #!/bin/bash
 set -e  # Stop script if any command fails
 
-# Run the commands in order
-echo "You WILL have to manually configure your disk. Luckily for you, the script formats the disk after. Here is your layout: boot, swap, root, home."
-read -p "Enter your disk name in `/dev` (e.g. 'sda' or 'nvme0n1'): " ddisk
+# Ask for the disk name
+echo "This script will automatically partition your disk with the following layout: boot, swap, root, and home."
+read -p "Enter your disk name in '/dev' (e.g., 'sda' or 'nvme0n1'): " ddisk
+[[ -b "/dev/$ddisk" ]] || abort "Disk /dev/$ddisk not found."
 
-# Ask for confirmation before proceeding
-read -p "WARNING: This will format the disk and destroy all data on /dev/$ddisk. Are you sure? (yes/no): " confirm
+# Confirm before proceeding
+read -p "WARNING: This will format and destroy all data on /dev/$ddisk. Are you sure? (yes/no): " confirm
 if [[ "$confirm" != "yes" ]]; then
     echo "Aborting."
     exit 1
 fi
 
-# Disk partitioning
-gdisk "/dev/$ddisk"
-cgdisk "/dev/$ddisk"
+# Get total disk size in MiB
+disk_size=$(lsblk -b -n -o SIZE "/dev/$ddisk" | awk '{print int($1 / 1024 / 1024)}')
+[[ "$disk_size" -ge 8192 ]] || abort "Disk size is too small. Minimum size is 8 GiB."
+
+# Partition size calculations
+boot_size=512        # Boot partition: 512 MiB
+swap_size=$((disk_size / 10)) # Swap: 10% of total disk size
+root_size=$((disk_size / 2))  # Root: 50% of total disk size
+home_size=$((disk_size - boot_size - swap_size - root_size)) # Remaining space for Home
+
+# Partition layout summary
+echo "Partition layout for /dev/$ddisk:"
+echo " - Boot: ${boot_size} MiB"
+echo " - Swap: ${swap_size} MiB"
+echo " - Root: ${root_size} MiB"
+echo " - Home: ${home_size} MiB"
+
+# Proceed with partitioning
+echo "Creating partitions..."
+parted -s "/dev/$ddisk" mklabel gpt \
+    mkpart ESP fat32 1MiB ${boot_size}MiB set 1 boot on \
+    mkpart primary linux-swap ${boot_size}MiB $((boot_size + swap_size))MiB \
+    mkpart primary ext4 $((boot_size + swap_size))MiB $((boot_size + swap_size + root_size))MiB \
+    mkpart primary ext4 $((boot_size + swap_size + root_size))MiB 100%
+
+# Wait for kernel to recognize partitions
+sleep 2
 
 # Format partitions
-mkfs.ext4 "/dev/${ddisk}3"
-mkfs.ext4 "/dev/${ddisk}4"
-mkswap "/dev/${ddisk}2"
+echo "Formatting partitions..."
+mkfs.fat -F 32 "/dev/${ddisk}1"    # Boot
+mkswap "/dev/${ddisk}2"           # Swap
 swapon "/dev/${ddisk}2"
-mkfs.fat -F 32 "/dev/${ddisk}1"
+mkfs.ext4 "/dev/${ddisk}3"        # Root
+mkfs.ext4 "/dev/${ddisk}4"        # Home
 
-# Mount partitions
-mount "/dev/${ddisk}3" /mnt
-mkdir -p /mnt/boot  # Ensure the directory exists
-mount "/dev/${ddisk}1" /mnt/boot
+echo "Partitioning and formatting complete."
+echo " - Boot: /dev/${ddisk}1"
+echo " - Swap: /dev/${ddisk}2"
+echo " - Root: /dev/${ddisk}3"
+echo " - Home: /dev/${ddisk}4"
 
 # Install necessary packages
 pacman -Sy --noconfirm pacman-contrib
