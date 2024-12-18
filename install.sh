@@ -59,6 +59,10 @@ swapon "/dev/${ddisk}2"
 mkfs.ext4 "/dev/${ddisk}3"        # Root
 mkfs.ext4 "/dev/${ddisk}4"        # Home
 
+# Mounting partitions
+mount "/dev/${ddisk}3" /mnt
+mount --mkdir "/dev/${ddisk}1" /mnt/boot
+
 echo "Partitioning and formatting complete."
 echo " - Boot: /dev/${ddisk}1"
 echo " - Swap: /dev/${ddisk}2"
