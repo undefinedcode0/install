@@ -5,22 +5,26 @@ read -p "Enter your username: " username
 read -p "Enter your hostname: " hostname
 read -p "Enter your disk name (e.g., sda): " ddisk
 
+# Prompt the user for timezone selection
+echo "Available timezones:"
+ls /usr/share/zoneinfo
+read -p "Enter your timezone (e.g., America/Mexico_City): " timezone
+
 # Set timezone and sync hardware clock
-ln -sf /usr/share/zoneinfo/America/Mexico_City /etc/localtime
+ln -sf /usr/share/zoneinfo/$timezone /etc/localtime
 hwclock --systohc
 
-# Install necessary packages in a single command
 pacman -S --noconfirm nano bash-completion git grub networkmanager efibootmgr
 
-# Enable multilib repository in pacman configuration
-sed -i '/\[multilib\]/,/Include/s/^#//' /etc/pacman.conf
+# Prompt the user for locale selection
+echo "Available locales (search for your desired one):"
+grep -oP "^#?\s*[a-zA-Z_]+\.UTF-8" /etc/locale.gen | sed 's/#\s*//' | sort
+read -p "Enter your locale (e.g., en_US.UTF-8): " locale
 
 # Configure system locale
-sed -i '/en_US.UTF-8/s/^#//g' /etc/locale.gen
-echo "LANG=en_US.UTF-8" > /etc/locale.conf
-locale-gen
-
-# Set hostname
+sed -i "/$locale/s/^#//g" /etc/locale.gen
+echo "LANG=$locale" > /etc/locale.conf
+locale-gen# Set hostname
 echo "$hostname" > /etc/hostname
 
 # Set root password
