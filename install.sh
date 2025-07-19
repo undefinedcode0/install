@@ -18,7 +18,7 @@ fi
 ram_size=$(free -m | awk '/^Mem:/{print $2}')
 
 # Get total disk size in MiB
-disk_size=$(lsblk -b -n -o SIZE "/dev/$ddisk" | awk '{print int($1 / 1024 / 1024)}')
+disk_size=$(lsblk -b -d -n -o SIZE "/dev/$ddisk" | awk '{print int($1 / 1024 / 1024)}')
 [[ "$disk_size" -ge 8192 ]] || { echo "Error: Disk size is too small. Minimum size is 8 GiB." >&2; exit 1; }
 
 # Swap size calculation
