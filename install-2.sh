@@ -41,19 +41,13 @@ echo "Defaults rootpw" | EDITOR='tee -a' visudo > /dev/null
 echo "%wheel ALL=(ALL) ALL" | EDITOR='tee -a' visudo > /dev/null
 
 # Ask if user wants to install GRUB with the Catppuccin theme
-read -p "Install GRUB with Catppuccin theme? (y/n): " install_grub
+read -p "Install GRUB? (y/n): " install_grub
 
 if [[ "$install_grub" == "y" ]]; then
     # Install and configure GRUB
     grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
     grub-mkconfig -o /boot/grub/grub.cfg
-
-    # Apply the Catppuccin theme
-    git clone https://github.com/catppuccin/grub.git
-    cp -r grub/src/* /usr/share/grub/themes/
-    echo 'GRUB_THEME="/usr/share/grub/themes/catppuccin-mocha-grub-theme/theme.txt"' >> /etc/default/grub
-    grub-mkconfig -o /boot/grub/grub.cfg
-    echo "GRUB with the Catppuccin theme installed."
+    echo "GRUB installed."
 else
     # Install systemd-boot if GRUB is not selected
     bootctl install
