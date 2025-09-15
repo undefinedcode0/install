@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # Prompt the user for their desired username, hostname, and disk name
 read -p "Enter your username: " username
