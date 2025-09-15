@@ -24,7 +24,7 @@ read -p "Enter your locale (e.g., en_US.UTF-8): " locale
 # Configure system locale
 sed -i "/$locale/s/^#//g" /etc/locale.gen
 echo "LANG=$locale" > /etc/locale.conf
-locale-gen# Set hostname
+locale-gen
 echo "$hostname" > /etc/hostname
 
 # Set root password
