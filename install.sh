@@ -30,7 +30,7 @@ fi
 
 # Partition size calculations
 boot_size=512                                    # Boot partition: 512 MiB
-root_size=$((disk_size - boot_size))                     # Root: Renaining space for /
+root_size=$((disk_size - boot_size - swap_size))                     # Root: Renaining space for /
 
 # Partition layout summary
 echo "Partition layout for /dev/$ddisk:"
@@ -44,7 +44,6 @@ parted -s "/dev/$ddisk" mklabel gpt \
     mkpart boot fat32 1MiB ${boot_size}MiB set 1 boot on \
     mkpart swap linux-swap ${boot_size}MiB $((boot_size + swap_size))MiB \
     mkpart root ext4 $((boot_size + swap_size))MiB $((boot_size + swap_size + root_size))MiB \
-    mkpart home ext4 $((boot_size + swap_size + root_size))MiB 100%
 
 # Wait for kernel to recognize partitions
 sleep 2
