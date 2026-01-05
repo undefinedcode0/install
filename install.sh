@@ -75,5 +75,5 @@ pacstrap /mnt base linux linux-firmware base-devel
 # Generate fstab
 genfstab -U /mnt >> /mnt/etc/fstab
 
-# Chroot into the new system
-arch-chroot /mnt
+# Chroot into the new system with the script
+arch-chroot /mnt /bin/bash -c "curl -s https://raw.githubusercontent.com/undefinedcode0/install/main/install-2.sh | bash"
