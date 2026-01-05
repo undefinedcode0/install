@@ -39,11 +39,11 @@ echo " - Root: ${root_size} MiB"
 
 # Proceed with partitioning
 echo "Creating partitions..."
-parted -s "/dev/$ddisk" mklabel gpt \
+yes | parted ---pretend-input-tty "/dev/$ddisk" mklabel gpt \
     mkpart boot fat32 1MiB ${boot_size}MiB \
     set 1 boot on \
     mkpart swap linux-swap ${boot_size}MiB $((boot_size + swap_size))MiB \
-    mkpart root ext4 $((boot_size + swap_size))MiB -- -1s
+    mkpart root ext4 $((boot_size + swap_size))MiB 100% 2>/dev/null || true
 
 # Wait for kernel to recognize partitions
 sleep 2
