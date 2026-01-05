@@ -30,15 +30,13 @@ fi
 
 # Partition size calculations
 boot_size=512                                    # Boot partition: 512 MiB
-root_size=$((disk_size * 70 / 100))                     # Root: 50% of total disk size
-home_size=$((disk_size - boot_size - swap_size - root_size)) # Remaining space for Home
+root_size=$((disk_size - boot_size))                     # Root: Renaining space for /
 
 # Partition layout summary
 echo "Partition layout for /dev/$ddisk:"
 echo " - Boot: ${boot_size} MiB"
 echo " - Swap: ${swap_size} MiB (based on RAM: ${ram_size} MiB)"
 echo " - Root: ${root_size} MiB"
-echo " - Home: ${home_size} MiB"
 
 # Proceed with partitioning
 echo "Creating partitions..."
@@ -57,7 +55,6 @@ mkfs.fat -F 32 "/dev/${ddisk}1"    # Boot
 mkswap "/dev/${ddisk}2"           # Swap
 swapon "/dev/${ddisk}2"
 mkfs.ext4 "/dev/${ddisk}3"        # Root
-mkfs.ext4 "/dev/${ddisk}4"        # Home
 
 # Mounting partitions
 mount "/dev/${ddisk}3" /mnt
@@ -67,7 +64,6 @@ echo "Partitioning and formatting complete."
 echo " - Boot: /dev/${ddisk}1"
 echo " - Swap: /dev/${ddisk}2"
 echo " - Root: /dev/${ddisk}3"
-echo " - Home: /dev/${ddisk}4"
 
 # Install necessary packages
 pacman -Sy --noconfirm pacman-contrib
